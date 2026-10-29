@@ -319,7 +319,7 @@
   .participant-row .pname .pn{ overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
   .participant-row .pshare{ min-width:62px; text-align:right; font-size:13.5px; font-weight:700; color:var(--ink); font-variant-numeric:tabular-nums; white-space:nowrap; }
   .participant-row input[type=checkbox]{ width:16px; accent-color:var(--primary); }
-  .participant-row input[type=number]{ width:72px; flex-shrink:0; text-align:right; font-family:var(--font); padding:8px 10px; }
+  .participant-row .p-value{ width:72px; flex-shrink:0; text-align:right; font-family:var(--font); padding:8px 10px; }
   .validation-msg{ font-size:12.5px; margin-top:8px; font-weight:600; }
   .validation-msg.ok{ color:var(--positive); }
   .validation-msg.bad{ color:var(--negative); }
@@ -388,6 +388,12 @@ let meta = { lastBackup: null };
 let reminderDismissed = false;
 
 function uid(){ return Math.random().toString(36).slice(2,10); }
+function parseNum(v){
+  const n = parseFloat(String(v).trim().replace(',', '.'));
+  return isNaN(n) ? 0 : n;
+}
+function fmt2(n){ return (Math.round(n * 100) / 100).toFixed(2); }
+
 function fmt(n){
   const sign = n < 0 ? '-' : '';
   return sign + 'CHF ' + Math.abs(n).toFixed(2);
@@ -1194,7 +1200,7 @@ function openExpenseModal(g){
   if(editingExpense) editingExpense.participants.forEach(p => { partMap[p.id] = p.value; });
 
   const descVal = formDraft ? formDraft.desc : (editingExpense ? editingExpense.desc : '');
-  const amountVal = formDraft ? formDraft.amount : (editingExpense ? editingExpense.amount : '');
+  const amountVal = formDraft ? formDraft.amount : (editingExpense ? fmt2(editingExpense.amount) : '');
   const nowP = nowParts();
   const dateVal = formDraft ? formDraft.date : (editingExpense ? (editingExpense.date || '') : nowP.date);
   const timeVal = formDraft ? formDraft.time : (editingExpense ? (editingExpense.time || '') : nowP.time);
@@ -1207,7 +1213,7 @@ function openExpenseModal(g){
     </div>
     <div class="field">
       <label>Betrag (CHF)</label>
-      <input id="f_amount" type="number" step="0.05" min="0" placeholder="0.00" value="${esc(amountVal)}">
+      <input id="f_amount" type="text" inputmode="decimal" autocomplete="off" placeholder="0.00" value="${esc(amountVal)}">
     </div>
     <div class="field">
       <label>Datum &amp; Zeit</label>
@@ -1250,11 +1256,11 @@ function openExpenseModal(g){
     row.className = 'participant-row';
     const isChecked = formDraft ? formDraft.checked.includes(m.id) : (editingExpense ? (m.id in partMap) : true);
     const keepValue = editingExpense && formMode === editingExpense.mode && (m.id in partMap);
-    const prefillValue = keepValue ? partMap[m.id] : '';
+    const prefillValue = keepValue ? (formMode === 'amount' ? fmt2(partMap[m.id]) : partMap[m.id]) : '';
     let inputHtml = '';
-    if(formMode === 'percent') inputHtml = `<input type="number" class="p-value" data-id="${m.id}" placeholder="%" step="1" value="${prefillValue}">`;
-    else if(formMode === 'amount') inputHtml = `<input type="number" class="p-value" data-id="${m.id}" placeholder="CHF" step="0.05" value="${prefillValue}">`;
-    else if(formMode === 'weight') inputHtml = `<input type="number" class="p-value" data-id="${m.id}" placeholder="Anteile" step="1" value="${prefillValue}">`;
+    if(formMode === 'percent') inputHtml = `<input type="text" inputmode="decimal" autocomplete="off" class="p-value" data-id="${m.id}" placeholder="%" value="${prefillValue}">`;
+    else if(formMode === 'amount') inputHtml = `<input type="text" inputmode="decimal" autocomplete="off" class="p-value" data-id="${m.id}" placeholder="CHF" value="${prefillValue}">`;
+    else if(formMode === 'weight') inputHtml = `<input type="text" inputmode="decimal" autocomplete="off" class="p-value" data-id="${m.id}" placeholder="Anteile" value="${prefillValue}">`;
     row.innerHTML = `
       <span class="pname"><input type="checkbox" class="p-check" data-id="${m.id}" ${isChecked ? 'checked' : ''}><span class="pn">${esc(m.name)}</span></span>
       ${inputHtml}
@@ -1265,6 +1271,24 @@ function openExpenseModal(g){
 
   pBox.querySelectorAll('.p-check, .p-value').forEach(el => el.addEventListener('input', validateForm));
   document.getElementById('f_amount').addEventListener('input', validateForm);
+  const cleanNum = (el, allowMinus) => el.addEventListener('input', () => {
+    const cleaned = el.value.replace(allowMinus ? /[^0-9.,\-]/g : /[^0-9.,]/g, '');
+    if(cleaned !== el.value) el.value = cleaned;
+  });
+  const amountEl = document.getElementById('f_amount');
+  cleanNum(amountEl, false);
+  amountEl.addEventListener('blur', () => {
+    if(amountEl.value.trim() !== '') amountEl.value = fmt2(parseNum(amountEl.value));
+    validateForm();
+  });
+  pBox.querySelectorAll('.p-value').forEach(el => {
+    cleanNum(el, true);
+    el.addEventListener('blur', () => {
+      if(el.value.trim() === '') return;
+      el.value = formMode === 'amount' ? fmt2(parseNum(el.value)) : String(parseNum(el.value));
+      validateForm();
+    });
+  });
   document.getElementById('saveExpenseBtn').onclick = () => saveExpense(g);
   document.getElementById('cancelExpenseBtn').onclick = closeModal;
   const delBtn = document.getElementById('deleteExpenseBtn');
@@ -1289,14 +1313,14 @@ function getFormParticipants(){
     let value = 1;
     if(formMode !== 'equal'){
       const valInput = document.querySelector(`.p-value[data-id="${id}"]`);
-      value = valInput ? parseFloat(valInput.value) || 0 : 0;
+      value = valInput ? parseNum(valInput.value) : 0;
     }
     return { id, value };
   });
 }
 
 function updateShares(){
-  const amount = parseFloat(document.getElementById('f_amount').value) || 0;
+  const amount = parseNum(document.getElementById('f_amount').value);
   const parts = getFormParticipants();
   const shares = parts.length ? computeShares({ amount, mode: formMode, participants: parts }) : {};
   document.querySelectorAll('.pshare').forEach(el => {
@@ -1310,7 +1334,7 @@ function validateForm(){
   const saveBtn = document.getElementById('saveExpenseBtn');
   if(!msgEl || !saveBtn) return;
   updateShares();
-  const amount = parseFloat(document.getElementById('f_amount').value) || 0;
+  const amount = parseNum(document.getElementById('f_amount').value);
   const parts = getFormParticipants();
   // Meldung nur bei Fehler bzw. Fehlbetrag. In den Modi mit Eingabe bleibt der Platz reserviert, damit die Zeilen nicht springen.
   const reserve = formMode !== 'equal';
@@ -1329,7 +1353,7 @@ function validateForm(){
   const sum = parts.reduce((t, p) => t + p.value, 0);
   if(formMode === 'percent'){
     const diff = Math.round((100 - sum) * 100) / 100;
-    return Math.abs(diff) < 0.5 ? set('', true) : set(`Prozente ergeben ${sum}% — Differenz ${diff}%.`, false);
+    return Math.abs(diff) < 0.5 ? set('', true) : set(`Prozente ergeben ${Math.round(sum * 100) / 100}% — Differenz ${diff}%.`, false);
   }
   if(formMode === 'amount'){
     const diff = Math.round((amount - sum) * 100) / 100;
@@ -1340,7 +1364,7 @@ function validateForm(){
 
 function saveExpense(g){
   const desc = document.getElementById('f_desc').value.trim() || 'Ausgabe';
-  const amount = parseFloat(document.getElementById('f_amount').value) || 0;
+  const amount = parseNum(document.getElementById('f_amount').value);
   const paidBy = document.getElementById('f_paidby').value;
   const parts = getFormParticipants();
   let date = document.getElementById('f_date').value;
