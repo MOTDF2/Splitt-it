@@ -2,7 +2,7 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <meta name="theme-color" content="#2856E8">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
@@ -33,6 +33,8 @@
   }
   *{box-sizing:border-box;}
   html,body{margin:0;padding:0;}
+  html{ -webkit-text-size-adjust:100%; text-size-adjust:100%; touch-action:manipulation; overflow-x:hidden; }
+  input, select, textarea{ min-width:0; max-width:100%; }
   body{
     background:
       radial-gradient(1100px 500px at 15% -10%, var(--bg-accent-1) 0%, transparent 60%),
@@ -86,6 +88,14 @@
   }
   .back-btn:hover{ background:var(--primary-soft-2); }
   .back-btn.show{ display:inline-flex; }
+  .menu-dots{
+    position:absolute; right:26px; top:32px; width:38px; height:31px;
+    background:var(--primary-soft); border:none; border-radius:20px; color:var(--primary-dark);
+    cursor:pointer; display:none; align-items:center; justify-content:center; padding:0;
+  }
+  .menu-dots:hover{ background:var(--primary-soft-2); }
+  .menu-dots.show{ display:inline-flex; }
+  .menu-dots svg{ width:18px; height:18px; fill:currentColor; }
   .wordmark{
     font-family:'Manrope', sans-serif;
     font-weight:800;
@@ -135,8 +145,8 @@
   }
   .chip button:hover{ background:#FFFFFF; }
   .add-member-row{ display:flex; gap:8px; margin-bottom:6px; }
-  input, select{
-    font-family:'Inter', sans-serif; font-size:14.5px;
+  input, select, textarea{
+    font-family:'Inter', sans-serif; font-size:16px;
     padding:11px 13px; border:1.5px solid var(--border); border-radius:12px;
     background:#FAFBFF; color:var(--ink); width:100%;
     transition:border-color .15s ease, background .15s ease;
@@ -244,18 +254,6 @@
   }
   #modalRoot{ position:relative; }
 
-  #printArea{ display:none; }
-  @media print{
-    #modalRoot{ display:none !important; }
-    body *{ visibility:hidden; }
-    #printArea, #printArea *{ visibility:visible; }
-    #printArea{ position:absolute; left:0; top:0; width:100%; padding:0; display:block; }
-  }
-  .print-title{ font-family:'Manrope', sans-serif; font-weight:800; font-size:20px; margin-bottom:2px; }
-  .print-meta{ font-size:12px; color:#555; margin-bottom:16px; }
-  .print-table{ width:100%; border-collapse:collapse; margin-bottom:18px; font-size:12.5px; }
-  .print-table th, .print-table td{ border-bottom:1px solid #ddd; padding:6px 8px; text-align:left; }
-  .print-section-title{ font-weight:700; font-size:13px; text-transform:uppercase; letter-spacing:.5px; margin:18px 0 8px; color:#333; }
 
   /* Start screen: group cards */
   .group-card{
@@ -284,8 +282,21 @@
     opacity:0.75;
   }
   .group-card .gdel:hover{ opacity:1; }
+  .menu-btn{
+    display:flex; align-items:center; justify-content:space-between; width:100%;
+    border:none; border-radius:16px; padding:16px; cursor:pointer; text-align:left; color:#fff;
+    font-family:'Manrope', sans-serif; font-weight:700; font-size:15.5px;
+    transition:transform .1s ease, box-shadow .15s ease;
+  }
+  .menu-btn .chev{ font-size:24px; line-height:1; opacity:.85; }
+  .menu-btn:active{ transform:translateY(1px); }
+  .menu-btn.members{ background:linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%); box-shadow:0 8px 20px -8px #2856E8AA; }
+  .menu-btn.archive{ background:linear-gradient(135deg, #7A5CF0 0%, #5A3FD0 100%); box-shadow:0 8px 20px -8px #6A4CE0AA; margin-top:18px; }
+  .menu-actions{ display:flex; flex-direction:column; gap:10px; }
+  .menu-actions .btn{ width:100%; margin:0; padding:13px 16px; }
+  .member-row .gcount{ color:var(--ink-muted); font-weight:400; font-size:12.5px; margin-left:8px; }
 
-  .expense{ padding: 12px 8px; margin:0 -8px; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:10px; cursor:pointer; border-radius:10px; transition:background .15s ease; }
+  .expense{ padding: 6px 8px; margin:0 -8px; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:10px; cursor:pointer; border-radius:10px; transition:background .15s ease; }
   .expense:hover{ background:var(--primary-soft); }
   .expense-main{ flex:1; min-width:0; }
   .expense-actions{ display:flex; gap:2px; flex-shrink:0; margin-left:auto; }
@@ -294,13 +305,13 @@
   .icon-btn.edit:hover{ background:var(--primary-soft); color:var(--primary-dark); }
   .icon-btn.del:hover{ background:var(--negative-soft); color:var(--negative); }
   .expense:last-child{ border-bottom:none; }
-  .line{ display:flex; align-items:baseline; gap:6px; }
-  .line .label{ font-size:14.5px; font-weight:600; white-space:nowrap; }
+  .line{ display:flex; align-items:baseline; gap:6px; line-height:1.25; }
+  .line .label{ font-size:14px; font-weight:600; white-space:nowrap; min-width:0; overflow:hidden; text-overflow:ellipsis; }
   .line .fill{ flex:1; }
-  .line .value{ font-family:'Manrope', sans-serif; font-size:15px; font-weight:700; color:var(--primary-darker); white-space:nowrap; }
+  .line .value{ flex-shrink:0;  font-family:'Manrope', sans-serif; font-size:14.5px; font-weight:700; color:var(--primary-darker); white-space:nowrap; }
   .expense-meta{
     display:flex; justify-content:space-between; align-items:center;
-    margin-top:4px; font-size:12px; color:var(--ink-muted);
+    margin-top:1px; font-size:11.5px; line-height:1.3; color:var(--ink-muted);
   }
   .empty-note{ font-size:13.5px; color:var(--ink-muted); padding:10px 0 4px; }
 
@@ -373,6 +384,7 @@
 
     <header class="masthead">
       <button class="back-btn" id="backBtn">‹ Gruppen</button>
+      <button class="menu-dots" id="groupMenuBtn" title="Gruppe verwalten" aria-label="Gruppe verwalten"><svg viewBox="0 0 24 24"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg></button>
       <p class="wordmark">splitt<span class="dot">’</span>it</p>
       <p class="subtitle" id="subtitle">Gruppenkasse</p>
     </header>
@@ -384,7 +396,6 @@
   </div>
 </div>
 
-<div id="printArea"></div>
 <div id="modalRoot"></div>
 
 
@@ -393,6 +404,7 @@ const STORAGE_KEY = 'splittr-data';
 let state = { people: [], groups: [], currentUserId: null };
 let currentGroupId = null;
 let showMembersView = false;
+let showArchiveView = false;
 let activeTab = 'ausgaben'; // 'ausgaben' | 'mitglieder' | 'statistik' | 'ausgleich'
 let formMode = 'equal';
 let formOpen = false;
@@ -435,6 +447,7 @@ function openModal(title, bodyHtml, onClose){
   });
 }
 function closeModal(){
+  if(document.activeElement && document.activeElement.blur) document.activeElement.blur();
   document.getElementById('modalRoot').innerHTML = '';
   const cb = modalOnClose; modalOnClose = null;
   if(cb) cb();
@@ -670,7 +683,10 @@ function deletePersonGlobally(id){
 
 function setCurrentUser(id){ state.currentUserId = id; saveState(); render(); }
 function personName(id){ const p = state.people.find(p => p.id === id); return p ? p.name : '?'; }
-function groupMembers(g){ return g.memberIds.map(id => state.people.find(p => p.id === id)).filter(Boolean); }
+function groupMembers(g){
+  return g.memberIds.map(id => state.people.find(p => p.id === id)).filter(Boolean)
+    .sort((a, b) => a.name.localeCompare(b.name, 'de', { sensitivity:'base' }));
+}
 
 /* ---------- Gruppen (Startbildschirm) ---------- */
 
@@ -685,14 +701,45 @@ function createGroup(name){
 
 function deleteGroup(id){
   const g = state.groups.find(g => g.id === id);
+  if(!g) return false;
+  if(!confirm(`Gruppe "${g.name}" inkl. aller Ausgaben endgültig löschen? (Mitglieder bleiben zentral erhalten)`)) return false;
+  const wasArchived = !!g.archived;
+  state.groups = state.groups.filter(x => x.id !== id);
+  saveState();
+  currentGroupId = null; showMembersView = false; showArchiveView = wasArchived;
+  render();
+  return true;
+}
+
+function toggleArchive(id){
+  const g = state.groups.find(g => g.id === id);
   if(!g) return;
-  if(!confirm(`Gruppe "${g.name}" inkl. aller Ausgaben löschen? (Mitglieder bleiben zentral erhalten)`)) return;
-  state.groups = state.groups.filter(g => g.id !== id);
-  saveState(); render();
+  g.archived = !g.archived;
+  saveState();
+  goToStart();
+}
+
+function openGroupMenu(){
+  const g = getGroup();
+  if(!g) return;
+  openModal('Gruppe verwalten', `
+    <div class="menu-actions">
+      <button class="btn btn-ink" id="gm_archive">${g.archived ? 'Gruppe wiederherstellen' : 'Gruppe archivieren'}</button>
+      <button class="btn btn-danger" id="gm_delete">Gruppe löschen</button>
+      <button class="btn btn-ghost" id="gm_close">Abbrechen</button>
+    </div>`);
+  document.getElementById('gm_archive').onclick = () => { closeModal(); toggleArchive(g.id); };
+  document.getElementById('gm_delete').onclick = () => { if(deleteGroup(g.id)) closeModal(); };
+  document.getElementById('gm_close').onclick = closeModal;
 }
 
 function openGroup(id){ currentGroupId = id; formOpen = false; formMode = 'equal'; activeTab = 'ausgaben'; render(); }
-function goToStart(){ currentGroupId = null; showMembersView = false; render(); }
+function goToStart(){ currentGroupId = null; showMembersView = false; showArchiveView = false; render(); }
+function goBack(){
+  const g = getGroup();
+  if(g && g.archived){ currentGroupId = null; showMembersView = false; showArchiveView = true; render(); }
+  else goToStart();
+}
 
 /* ---------- Teilnehmer innerhalb einer Gruppe ---------- */
 
@@ -784,69 +831,76 @@ function computeSettlements(balances){
 /* ---------- Rendering: Grundgerüst ---------- */
 
 function render(){
-  document.getElementById('backBtn').classList.toggle('show', currentGroupId !== null || showMembersView);
-  document.getElementById('backBtn').onclick = goToStart;
+  const inGroup = currentGroupId !== null;
+  const backBtn = document.getElementById('backBtn');
+  backBtn.classList.toggle('show', inGroup || showMembersView || showArchiveView);
+  backBtn.onclick = goBack;
+  const menuBtn = document.getElementById('groupMenuBtn');
+  menuBtn.classList.toggle('show', inGroup);
+  menuBtn.onclick = openGroupMenu;
 
-  if(currentGroupId === null && showMembersView){
-    document.getElementById('subtitle').textContent = 'Mitglieder';
+  if(!inGroup && showMembersView){
+    document.getElementById('subtitle').textContent = 'Mitgliederverwaltung';
     renderMembersScreen();
-  } else if(currentGroupId === null){
+  } else if(!inGroup && showArchiveView){
+    document.getElementById('subtitle').textContent = 'Archiv';
+    renderArchiveScreen();
+  } else if(!inGroup){
     document.getElementById('subtitle').textContent = 'Gruppenkasse';
     renderStartScreen();
   } else {
     const g = getGroup();
     if(!g){ goToStart(); return; }
-    document.getElementById('subtitle').textContent = g.name;
+    document.getElementById('subtitle').textContent = g.name + (g.archived ? ' · archiviert' : '');
     renderGroupScreen(g);
   }
 }
 
-function renderStartScreen(){
-  const main = document.getElementById('mainContent');
-  let groupsHtml = '';
-  if(state.groups.length === 0){
-    groupsHtml = '<p class="empty-note">Noch keine Gruppen — mit + eine erstellen.</p>';
-  } else {
-    groupsHtml = state.groups.map(g => {
-      const total = g.expenses.reduce((s,e) => s + e.amount, 0);
-      return `
-        <div class="group-card" data-id="${g.id}">
-          <div>
-            <div class="gname">${g.name}</div>
-            <div class="gmeta">${g.memberIds.length} Pers. · ${fmt(total)}</div>
-          </div>
-          <button class="gdel" data-id="${g.id}">löschen</button>
-        </div>
-      `;
-    }).join('');
-  }
-
-  main.innerHTML = `
-    <div class="section-title" style="margin-top:0;">Deine Gruppen</div>
-    ${groupsHtml}
-    <button class="add-btn" id="addGroupBtn" title="Neue Gruppe" aria-label="Neue Gruppe">+</button>
-
-    <div class="section-title" style="margin-top:30px;">Mitglieder</div>
-    <div class="group-card" id="openMembersCard">
-      <div>
-        <div class="gname">Zentrale Mitglieder</div>
-        <div class="gmeta">${state.people.length} ${state.people.length === 1 ? 'Person' : 'Personen'}</div>
-      </div>
+function groupCardsHtml(list){
+  return list.map(g => `
+    <div class="group-card" data-id="${g.id}">
+      <div class="gname">${esc(g.name)}</div>
       <span style="color:var(--ink-muted);font-size:24px;line-height:1;">›</span>
     </div>
+  `).join('');
+}
+
+function bindGroupCards(root){
+  root.querySelectorAll('.group-card').forEach(card => {
+    card.addEventListener('click', () => openGroup(card.dataset.id));
+  });
+}
+
+function renderStartScreen(){
+  const main = document.getElementById('mainContent');
+  const active = state.groups.filter(g => !g.archived);
+  const groupsHtml = active.length === 0
+    ? '<p class="empty-note">Noch keine Gruppen — mit + eine erstellen.</p>'
+    : groupCardsHtml(active);
+
+  main.innerHTML = `
+    <button class="menu-btn members" id="openMembersBtn"><span>Mitgliederverwaltung</span><span class="chev">›</span></button>
+    <div class="section-title">Deine Gruppen</div>
+    ${groupsHtml}
+    <button class="menu-btn archive" id="openArchiveBtn"><span>Archivierte Gruppen</span><span class="chev">›</span></button>
+    <button class="add-btn" id="addGroupBtn" title="Neue Gruppe" aria-label="Neue Gruppe">+</button>
   `;
 
-  main.querySelectorAll('.group-card').forEach(card => {
-    card.addEventListener('click', (e) => {
-      if(e.target.classList.contains('gdel')) return;
-      openGroup(card.dataset.id);
-    });
-  });
-  main.querySelectorAll('.gdel').forEach(btn => {
-    btn.addEventListener('click', (e) => { e.stopPropagation(); deleteGroup(btn.dataset.id); });
-  });
+  bindGroupCards(main);
   document.getElementById('addGroupBtn').onclick = openAddGroupModal;
-  document.getElementById('openMembersCard').onclick = () => { showMembersView = true; render(); };
+  document.getElementById('openMembersBtn').onclick = () => { showMembersView = true; render(); };
+  document.getElementById('openArchiveBtn').onclick = () => { showArchiveView = true; render(); };
+}
+
+function renderArchiveScreen(){
+  const main = document.getElementById('mainContent');
+  const archived = state.groups.filter(g => g.archived);
+  main.innerHTML = `
+    <div class="section-title" style="margin-top:0;">Archivierte Gruppen</div>
+    ${archived.length ? groupCardsHtml(archived) : '<p class="empty-note">Keine archivierten Gruppen.</p>'}
+    ${archived.length ? '<p class="hint" style="text-align:center;margin-top:14px;">Zum Wiederherstellen die Gruppe öffnen und oben rechts auf ⋯ tippen.</p>' : ''}
+  `;
+  bindGroupCards(main);
 }
 
 function renderMembersScreen(){
@@ -889,17 +943,7 @@ function renderYouStats(g){
   const box = document.getElementById('youStatsBox');
   const members = groupMembers(g);
   if(!state.currentUserId || !g.memberIds.includes(state.currentUserId)){
-    box.innerHTML = `
-      <div class="you-prompt">
-        <strong>Wer bist du in dieser Gruppe?</strong>
-        <div><select id="youSelect">
-          <option value="">— auswählen —</option>
-          ${members.map(m => `<option value="${m.id}">${m.name}</option>`).join('')}
-        </select></div>
-      </div>
-    `;
-    const sel = document.getElementById('youSelect');
-    if(sel) sel.onchange = () => { if(sel.value) setCurrentUser(sel.value); };
+    box.innerHTML = '';
     return;
   }
 
@@ -951,6 +995,13 @@ function renderAusgabenTab(g, wrap){
   renderExpenses(g);
 }
 
+function sortedExpenses(g){
+  return g.expenses
+    .map((e, idx) => ({ e, idx, key: e.date ? e.date + 'T' + (e.time || '') : '' }))
+    .sort((a, b) => (a.key < b.key ? 1 : a.key > b.key ? -1 : b.idx - a.idx))
+    .map(x => x.e);
+}
+
 function renderExpenses(g){
   const list = document.getElementById('expensesList');
   if(!list) return;
@@ -958,11 +1009,7 @@ function renderExpenses(g){
   if(g.expenses.length === 0){
     list.innerHTML = '<p class="empty-note">Noch keine Ausgaben — mit + erfassen.</p>';
   } else {
-    g.expenses
-      .map((e, idx) => ({ e, idx, key: (e.date || '') + 'T' + (e.time || '') }))
-      .sort((a, b) => (a.key < b.key ? 1 : a.key > b.key ? -1 : b.idx - a.idx))
-      .map(x => x.e)
-      .forEach(e => {
+    sortedExpenses(g).forEach(e => {
       const div = document.createElement('div');
       div.className = 'expense';
       const modeLabel = {equal:'gleich', percent:'Prozent', amount:'Betrag', weight:'Anteile'}[e.mode];
@@ -1233,9 +1280,10 @@ function renderDirectory(){
   if(!row) return;
   sortPeople();
   if(state.people.length === 0){ row.innerHTML = '<p class="empty-note">Noch keine Mitglieder — mit + erfassen.</p>'; return; }
-  row.innerHTML = state.people.map(p =>
-    `<button class="member-row" data-id="${p.id}"><span>${esc(p.name)}</span><span class="chev">›</span></button>`
-  ).join('');
+  row.innerHTML = state.people.map(p => {
+    const n = state.groups.filter(g => g.memberIds.includes(p.id)).length;
+    return `<button class="member-row" data-id="${p.id}"><span>${esc(p.name)}<span class="gcount">${n === 1 ? '1 Gruppe' : n + ' Gruppen'}</span></span><span class="chev">›</span></button>`;
+  }).join('');
   row.querySelectorAll('.member-row').forEach(btn => {
     btn.addEventListener('click', () => openEditPersonModal(btn.dataset.id));
   });
@@ -1292,7 +1340,7 @@ function renderAusgleichTab(g, wrap){
     <div class="section-title">Ausgleichszahlungen</div>
     <div id="settleList"></div>
     <button class="btn btn-ink" id="exportPdfBtn" style="margin-top:16px;width:100%;">📄 Zusammenfassung als PDF exportieren</button>
-    <p class="hint" style="text-align:center;margin-top:8px;">Öffnet den Druckdialog — dort "Als PDF speichern" wählen.</p>
+    <p class="hint" style="text-align:center;margin-top:8px;">Erstellt eine PDF-Datei (A4) zum Speichern oder Teilen.</p>
   `;
   document.getElementById('exportPdfBtn').onclick = () => exportGroupPdf(g);
   renderBalances(g);
@@ -1335,53 +1383,190 @@ function renderBalances(g){
   }
 }
 
-/* --- PDF-Export (via Browser-Druck) --- */
-function exportGroupPdf(g){
+/* --- PDF-Export (eigener PDF-Generator, funktioniert ohne Druckdialog) --- */
+const PDF_W = [278,278,355,556,556,889,667,191,333,333,389,584,278,333,278,278,556,556,556,556,556,556,556,556,556,556,278,278,584,584,584,556,1015,667,667,722,722,667,611,778,722,278,500,667,556,833,722,778,667,778,722,667,611,722,667,944,667,667,611,278,278,278,469,556,333,556,556,500,556,556,278,556,556,222,222,500,222,833,556,556,556,556,333,500,278,556,500,722,500,500,500,334,260,334,584];
+
+function pdfClean(s){
+  return String(s)
+    .replace(/[\u2018\u2019]/g, "'").replace(/[\u201C\u201D]/g, '"')
+    .replace(/[\u2013\u2014]/g, '-').replace(/\u2026/g, '...').replace(/\u2192/g, '>')
+    .replace(/[^\x20-\x7E\xA0-\xFF]/g, '?');
+}
+function pdfEsc(s){ return s.replace(/\\/g, '\\\\').replace(/\(/g, '\\(').replace(/\)/g, '\\)'); }
+function pdfCharW(ch){
+  const c = ch.charCodeAt(0);
+  if(c >= 32 && c <= 126) return PDF_W[c - 32];
+  if(c === 0xDF) return 611;
+  const base = ch.normalize('NFD').charCodeAt(0);
+  if(base >= 32 && base <= 126) return PDF_W[base - 32];
+  return 556;
+}
+function pdfTextW(s, size, bold){
+  let w = 0;
+  for(const ch of s) w += pdfCharW(ch);
+  return w * size / 1000 * (bold ? 1.06 : 1);
+}
+function pdfWrap(s, maxW, size, bold){
+  s = pdfClean(s);
+  const lines = [];
+  let line = '';
+  s.split(/\s+/).filter(Boolean).forEach(word => {
+    const test = line ? line + ' ' + word : word;
+    if(pdfTextW(test, size, bold) <= maxW){ line = test; return; }
+    if(line){ lines.push(line); line = ''; }
+    while(pdfTextW(word, size, bold) > maxW && word.length > 1){
+      let n = word.length - 1;
+      while(n > 1 && pdfTextW(word.slice(0, n), size, bold) > maxW) n--;
+      lines.push(word.slice(0, n));
+      word = word.slice(n);
+    }
+    line = word;
+  });
+  if(line || lines.length === 0) lines.push(line);
+  return lines;
+}
+
+function buildGroupPdf(g){
+  const PW = 595.28, PH = 841.89, M = 40, CW = PW - 2 * M, LIMIT = PH - M - 12;
+  const INK = [0.06, 0.1, 0.2], MUTED = [0.4, 0.44, 0.55], BLUE = [0.1, 0.25, 0.6], HEAD = [0.91, 0.93, 1], RULE = [0.85, 0.87, 0.93];
+  const pages = [];
+  let cur = null, y = M;
+  const newPage = () => { cur = []; pages.push(cur); y = M; };
+  const txt = (x, base, s, size, bold, color, align, w) => {
+    const px = align === 'right' ? x + w - pdfTextW(s, size, bold) : x;
+    cur.push(`${color.join(' ')} rg BT /${bold ? 'F2' : 'F1'} ${size} Tf ${px.toFixed(2)} ${(PH - base).toFixed(2)} Td (${pdfEsc(s)}) Tj ET`);
+  };
+  const rect = (top, h, c) => cur.push(`${c.join(' ')} rg ${M} ${(PH - top - h).toFixed(2)} ${CW.toFixed(2)} ${h.toFixed(2)} re f`);
+  const hline = (top, c) => cur.push(`${c.join(' ')} RG 0.5 w ${M} ${(PH - top).toFixed(2)} m ${(M + CW).toFixed(2)} ${(PH - top).toFixed(2)} l S`);
+
+  const SIZE = 9.5, LH = 12, PAD = 4;
+  const table = (cols, headers, rows) => {
+    const header = () => {
+      const h = LH + PAD * 2;
+      rect(y, h, HEAD);
+      let x = M;
+      headers.forEach((t, i) => { txt(x + 4, y + PAD + LH - 3, t, SIZE, true, INK, cols[i].align, cols[i].w - 8); x += cols[i].w; });
+      y += h;
+    };
+    if(y + 60 > LIMIT) newPage();
+    header();
+    rows.forEach(cells => {
+      const lines = cells.map((c, i) => pdfWrap(c, cols[i].w - 8, SIZE, false));
+      const n = Math.max(1, ...lines.map(l => l.length));
+      const h = n * LH + PAD * 2;
+      if(y + h > LIMIT){ newPage(); header(); }
+      let x = M;
+      lines.forEach((ls, i) => {
+        ls.forEach((l, k) => txt(x + 4, y + PAD + LH * (k + 1) - 3, l, SIZE, false, INK, cols[i].align, cols[i].w - 8));
+        x += cols[i].w;
+      });
+      hline(y + h, RULE);
+      y += h;
+    });
+    y += 16;
+  };
+  const section = title => {
+    if(y + 80 > LIMIT) newPage();
+    txt(M, y + 12, pdfClean(title), 12, true, INK, 'left');
+    y += 22;
+  };
+
+  newPage();
+  const members = groupMembers(g);
   const balances = computeBalances(g);
   const txns = computeSettlements(balances);
-  const members = groupMembers(g);
-  const total = g.expenses.reduce((s,e) => s + e.amount, 0);
-  const now = new Date().toLocaleDateString('de-CH');
+  const total = g.expenses.reduce((s, e) => s + e.amount, 0);
 
-  const expenseRows = g.expenses.map(e => {
-    const modeLabel = {equal:'Gleich', percent:'Prozent', amount:'Betrag', weight:'Anteile'}[e.mode];
-    return `<tr><td>${[fmtDate(e.date), e.time || ''].filter(Boolean).join(' ')}</td><td>${esc(e.desc)}</td><td>${fmt(e.amount)}</td><td>${esc(personName(e.paidBy))}</td><td>${modeLabel}</td></tr>`;
-  }).join('') || '<tr><td colspan="5">Keine Ausgaben.</td></tr>';
+  pdfWrap("Splitt'it - " + g.name, CW, 18, true).forEach(l => { txt(M, y + 16, l, 18, true, BLUE, 'left'); y += 22; });
+  txt(M, y + 10, pdfClean(`Erstellt am ${new Date().toLocaleDateString('de-CH')} · ${members.length} Mitglieder · Total ${fmt(total)}`), SIZE, false, MUTED, 'left');
+  y += 28;
 
-  const balanceRows = members.map(m => {
+  section('Ausgaben');
+  const modeNames = { equal:'Gleich', percent:'Prozent', amount:'Betrag', weight:'Anteile' };
+  const expRows = sortedExpenses(g).map(e => [
+    [fmtDate(e.date), e.time || ''].filter(Boolean).join(' '),
+    e.desc, fmt(e.amount), personName(e.paidBy), modeNames[e.mode] || ''
+  ]);
+  table(
+    [{ w:82 }, { w:195 }, { w:78, align:'right' }, { w:100 }, { w:60 }],
+    ['Datum / Zeit', 'Beschreibung', 'Betrag', 'Bezahlt von', 'Aufteilung'],
+    expRows.length ? expRows : [['Keine Ausgaben.', '', '', '', '']]
+  );
+
+  section('Salden');
+  const balRows = members.map(m => {
     const b = balances[m.id] ?? 0;
-    const label = b > 0.01 ? 'bekommt' : b < -0.01 ? 'schuldet' : 'ausgeglichen';
-    return `<tr><td>${m.name}</td><td>${label}</td><td>${fmt(Math.abs(b))}</td></tr>`;
-  }).join('');
+    return [m.name, b > 0.01 ? 'bekommt' : b < -0.01 ? 'schuldet' : 'ausgeglichen', fmt(Math.abs(b))];
+  });
+  table(
+    [{ w:215 }, { w:170 }, { w:130, align:'right' }],
+    ['Person', 'Status', 'Betrag'],
+    balRows.length ? balRows : [['Keine Teilnehmer.', '', '']]
+  );
 
-  const settleRows = txns.length
-    ? txns.map(t => `<tr><td>${personName(t.from)}</td><td>→</td><td>${personName(t.to)}</td><td>${fmt(t.amount)}</td></tr>`).join('')
-    : '<tr><td colspan="4">Kein Ausgleich nötig.</td></tr>';
+  section('Ausgleichszahlungen');
+  const setRows = txns.map(t => [personName(t.from), personName(t.to), fmt(t.amount)]);
+  table(
+    [{ w:215 }, { w:170 }, { w:130, align:'right' }],
+    ['Von', 'An', 'Betrag'],
+    setRows.length ? setRows : [['Kein Ausgleich nötig.', '', '']]
+  );
 
-  document.getElementById('printArea').innerHTML = `
-    <div class="print-title">Splitt'it — ${g.name}</div>
-    <div class="print-meta">Erstellt am ${now} · ${members.length} Mitglieder · Total ${fmt(total)}</div>
+  const n = pages.length;
+  pages.forEach((p, i) => { cur = p; txt(M, PH - 22, `Seite ${i + 1} / ${n}`, 8, false, MUTED, 'right', CW); });
 
-    <div class="print-section-title">Ausgaben</div>
-    <table class="print-table">
-      <thead><tr><th>Datum / Zeit</th><th>Beschreibung</th><th>Betrag</th><th>Bezahlt von</th><th>Aufteilung</th></tr></thead>
-      <tbody>${expenseRows}</tbody>
-    </table>
+  // PDF-Objekte zusammensetzen (jedes Zeichen = 1 Byte, alles Latin-1)
+  const objs = [];
+  objs[1] = '<< /Type /Catalog /Pages 2 0 R >>';
+  objs[3] = '<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>';
+  objs[4] = '<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>';
+  const kids = [];
+  pages.forEach((p, i) => {
+    const pageNo = 5 + i * 2, contentNo = 6 + i * 2;
+    kids.push(`${pageNo} 0 R`);
+    const stream = p.join('\n');
+    objs[pageNo] = `<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${PW} ${PH}] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents ${contentNo} 0 R >>`;
+    objs[contentNo] = `<< /Length ${stream.length} >>\nstream\n${stream}\nendstream`;
+  });
+  objs[2] = `<< /Type /Pages /Kids [${kids.join(' ')}] /Count ${pages.length} >>`;
 
-    <div class="print-section-title">Salden</div>
-    <table class="print-table">
-      <thead><tr><th>Person</th><th>Status</th><th>Betrag</th></tr></thead>
-      <tbody>${balanceRows}</tbody>
-    </table>
+  let out = '%PDF-1.4\n%\u00E2\u00E3\u00CF\u00D3\n';
+  const offsets = [];
+  for(let i = 1; i < objs.length; i++){
+    offsets[i] = out.length;
+    out += `${i} 0 obj\n${objs[i]}\nendobj\n`;
+  }
+  const xref = out.length;
+  out += `xref\n0 ${objs.length}\n0000000000 65535 f \n`;
+  for(let i = 1; i < objs.length; i++) out += String(offsets[i]).padStart(10, '0') + ' 00000 n \n';
+  out += `trailer\n<< /Size ${objs.length} /Root 1 0 R >>\nstartxref\n${xref}\n%%EOF`;
 
-    <div class="print-section-title">Ausgleichszahlungen</div>
-    <table class="print-table">
-      <thead><tr><th>Von</th><th></th><th>An</th><th>Betrag</th></tr></thead>
-      <tbody>${settleRows}</tbody>
-    </table>
-  `;
+  const bytes = new Uint8Array(out.length);
+  for(let i = 0; i < out.length; i++) bytes[i] = out.charCodeAt(i) & 255;
+  return bytes;
+}
 
-  setTimeout(() => window.print(), 50);
+async function deliverPdf(bytes, filename){
+  const blob = new Blob([bytes], { type:'application/pdf' });
+  const file = (typeof File === 'function') ? new File([blob], filename, { type:'application/pdf' }) : null;
+  const touch = window.matchMedia && window.matchMedia('(pointer: coarse)').matches;
+  if(touch && file && navigator.canShare && navigator.canShare({ files:[file] })){
+    try{ await navigator.share({ files:[file], title: filename }); return; }
+    catch(err){ if(err && err.name === 'AbortError') return; }
+  }
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = filename;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 60000);
+}
+
+async function exportGroupPdf(g){
+  let bytes;
+  try{ bytes = buildGroupPdf(g); }
+  catch(err){ console.error(err); alert('Die PDF-Datei konnte nicht erstellt werden.'); return; }
+  const safe = g.name.replace(/[^A-Za-z0-9äöüÄÖÜ_-]+/g, '_').replace(/^_+|_+$/g, '') || 'Gruppe';
+  await deliverPdf(bytes, `Splittit_${safe}_${nowParts().date}.pdf`);
 }
 
 function updateHeaderOffset(){
