@@ -273,10 +273,6 @@
   .menu-btn.members{ background:linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%); box-shadow:0 8px 20px -8px #2856E8AA; }
   .menu-btn.archive{ background:linear-gradient(135deg, #7A5CF0 0%, #5A3FD0 100%); box-shadow:0 8px 20px -8px #6A4CE0AA; margin-top:18px; }
   .menu-actions{ display:flex; flex-direction:column; gap:10px; }
-  .backup-banner{ display:flex; align-items:center; gap:8px; background:#FFF6E0; border:1px solid #F5D98A; color:#7A5300; border-radius:14px; padding:10px 12px; margin-bottom:14px; font-size:12.5px; font-weight:600; }
-  .backup-banner span{ flex:1; }
-  .backup-banner button{ border:none; background:#F5A524; color:#fff; font-weight:700; font-size:12px; border-radius:10px; padding:7px 10px; cursor:pointer; white-space:nowrap; }
-  .backup-banner button.x{ background:transparent; color:#7A5300; font-size:18px; line-height:1; padding:2px 6px; }
   .menu-actions .btn{ width:100%; margin:0; padding:13px 16px; }
   .member-row .gcount{ color:var(--ink-muted); font-weight:400; font-size:12.5px; margin-left:8px; }
 
@@ -385,7 +381,6 @@ let editingExpenseId = null;
 let formDraft = null;
 let modalOnClose = null;
 let meta = { lastBackup: null };
-let reminderDismissed = false;
 
 function uid(){ return Math.random().toString(36).slice(2,10); }
 function parseNum(v){
@@ -695,27 +690,12 @@ async function saveState(){
 }
 
 /* ---------- Datensicherung (Export / Import als JSON-Datei) ---------- */
-const BACKUP_REMIND_DAYS = 183;   // ca. ein halbes Jahr
-
 function fmtStamp(ts){
   const d = new Date(ts);
   const p = n => String(n).padStart(2, '0');
   return `${p(d.getDate())}.${p(d.getMonth() + 1)}.${d.getFullYear()} · ${p(d.getHours())}:${p(d.getMinutes())}`;
 }
 function plural(n, one, many){ return n + ' ' + (n === 1 ? one : many); }
-function hasData(){ return state.people.length > 0 || state.groups.length > 0; }
-function backupDue(){
-  if(!hasData()) return false;
-  if(!meta.lastBackup) return true;
-  return (Date.now() - meta.lastBackup) > BACKUP_REMIND_DAYS * 86400000;
-}
-function backupBannerHtml(){
-  if(reminderDismissed || !backupDue()) return '';
-  const days = meta.lastBackup ? Math.floor((Date.now() - meta.lastBackup) / 86400000) : null;
-  const msg = days === null ? 'Noch keine Datensicherung erstellt.' : `Letzte Sicherung vor ${days} Tagen.`;
-  return `<div class="backup-banner"><span>${msg}</span><button id="backupBannerBtn">Jetzt sichern</button><button class="x" id="backupBannerX" aria-label="Ausblenden">×</button></div>`;
-}
-
 async function exportBackup(){
   const payload = { app: 'splittit', version: 1, exportedAt: new Date().toISOString(), state };
   const bytes = new TextEncoder().encode(JSON.stringify(payload, null, 2));
@@ -1001,7 +981,6 @@ function renderStartScreen(){
     : groupCardsHtml(active);
 
   main.innerHTML = `
-    ${backupBannerHtml()}
     <button class="menu-btn members" id="openMembersBtn"><span>Mitgliederverwaltung</span><span class="chev">›</span></button>
     <div class="section-title">Deine Gruppen</div>
     ${groupsHtml}
@@ -1011,11 +990,6 @@ function renderStartScreen(){
 
   bindGroupCards(main);
   document.getElementById('addGroupBtn').onclick = openAddGroupModal;
-  const bb = document.getElementById('backupBannerBtn');
-  if(bb){
-    bb.onclick = openBackupModal;
-    document.getElementById('backupBannerX').onclick = () => { reminderDismissed = true; render(); };
-  }
   document.getElementById('openMembersBtn').onclick = () => { showMembersView = true; render(); };
   document.getElementById('openArchiveBtn').onclick = () => { showArchiveView = true; render(); };
 }
