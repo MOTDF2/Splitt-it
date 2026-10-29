@@ -941,6 +941,9 @@ function computeSettlements(balances){
     if(d.amt < 0.01) i++;
     if(c.amt < 0.01) j++;
   }
+  // Sortierung: zuerst nach Name "von", dann nach Name "an" (alphabetisch)
+  const byName = (x, y) => personName(x).localeCompare(personName(y), 'de', { sensitivity:'base' });
+  txns.sort((t1, t2) => byName(t1.from, t2.from) || byName(t1.to, t2.to));
   return txns;
 }
 
