@@ -815,15 +815,43 @@ function toggleArchive(id){
   goToStart();
 }
 
+function openRenameGroupModal(id){
+  const g = state.groups.find(x => x.id === id);
+  if(!g) return;
+  openModal('Gruppe umbenennen', `
+    <div class="field">
+      <label>Name der Gruppe</label>
+      <input id="m_groupName" type="text" maxlength="30" value="${esc(g.name)}">
+    </div>
+    <div class="form-actions">
+      <button class="btn btn-ink" id="m_save">Speichern</button>
+      <button class="btn btn-ghost" id="m_cancel">Abbrechen</button>
+    </div>`);
+  const input = document.getElementById('m_groupName');
+  const submit = () => {
+    const v = input.value.trim();
+    if(!v){ input.focus(); return; }
+    closeModal();
+    if(v !== g.name){ g.name = v; saveState(); }
+    render();
+  };
+  document.getElementById('m_save').onclick = submit;
+  document.getElementById('m_cancel').onclick = closeModal;
+  input.addEventListener('keydown', e => { if(e.key === 'Enter') submit(); });
+  input.focus(); input.select();
+}
+
 function openGroupMenu(){
   const g = getGroup();
   if(!g) return;
   openModal('Gruppe verwalten', `
     <div class="menu-actions">
+      <button class="btn btn-ink" id="gm_rename">Gruppe umbenennen</button>
       <button class="btn btn-ink" id="gm_archive">${g.archived ? 'Gruppe wiederherstellen' : 'Gruppe archivieren'}</button>
       <button class="btn btn-danger" id="gm_delete">Gruppe löschen</button>
       <button class="btn btn-ghost" id="gm_close">Abbrechen</button>
     </div>`);
+  document.getElementById('gm_rename').onclick = () => { closeModal(); openRenameGroupModal(g.id); };
   document.getElementById('gm_archive').onclick = () => { closeModal(); toggleArchive(g.id); };
   document.getElementById('gm_delete').onclick = () => { if(deleteGroup(g.id)) closeModal(); };
   document.getElementById('gm_close').onclick = closeModal;
