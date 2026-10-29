@@ -313,11 +313,13 @@
   }
   .mode-tabs button:last-child{ border-right:none; }
   .mode-tabs button.active{ background:var(--primary); color:#fff; }
-  .participant-row{ display:flex; align-items:center; gap:8px; padding:8px 0; border-bottom:1px solid var(--border); }
+  .participant-row{ display:flex; align-items:center; gap:8px; min-height:54px; padding:0; box-sizing:border-box; border-bottom:1px solid var(--border); }
   .participant-row:last-child{ border-bottom:none; }
-  .participant-row .pname{ flex:1; font-size:14px; font-weight:500; display:flex; align-items:center; gap:8px; }
+  .participant-row .pname{ flex:1; min-width:0; font-size:14px; font-weight:500; display:flex; align-items:center; gap:8px; }
+  .participant-row .pname .pn{ overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .participant-row .pshare{ min-width:62px; text-align:right; font-size:13.5px; font-weight:700; color:var(--ink); font-variant-numeric:tabular-nums; white-space:nowrap; }
   .participant-row input[type=checkbox]{ width:16px; accent-color:var(--primary); }
-  .participant-row input[type=number]{ width:80px; text-align:right; font-family:var(--font); padding:8px 10px; }
+  .participant-row input[type=number]{ width:72px; flex-shrink:0; text-align:right; font-family:var(--font); padding:8px 10px; }
   .validation-msg{ font-size:12.5px; margin-top:8px; font-weight:600; }
   .validation-msg.ok{ color:var(--positive); }
   .validation-msg.bad{ color:var(--negative); }
@@ -1228,9 +1230,9 @@ function openExpenseModal(g){
     </div>
     <div class="field">
       <label>Teilnehmer</label>
+      <div class="validation-msg" id="validationMsg" style="margin:0 0 6px;"></div>
       <div id="participantsBox"></div>
     </div>
-    <div class="validation-msg" id="validationMsg"></div>
     <div class="form-actions icon-actions">
       <button class="btn btn-ink" id="saveExpenseBtn" title="${editingExpense ? 'Änderungen speichern' : 'Speichern'}" aria-label="${editingExpense ? 'Änderungen speichern' : 'Speichern'}"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></button>
       <button class="btn btn-ghost" id="cancelExpenseBtn" title="Abbrechen" aria-label="Abbrechen"><svg viewBox="0 0 24 24"><path d="M6 6l12 12"/><path d="M18 6L6 18"/></svg></button>
@@ -1254,8 +1256,9 @@ function openExpenseModal(g){
     else if(formMode === 'amount') inputHtml = `<input type="number" class="p-value" data-id="${m.id}" placeholder="CHF" step="0.05" value="${prefillValue}">`;
     else if(formMode === 'weight') inputHtml = `<input type="number" class="p-value" data-id="${m.id}" placeholder="Anteile" step="1" value="${prefillValue}">`;
     row.innerHTML = `
-      <span class="pname"><input type="checkbox" class="p-check" data-id="${m.id}" ${isChecked ? 'checked' : ''}> ${esc(m.name)}</span>
+      <span class="pname"><input type="checkbox" class="p-check" data-id="${m.id}" ${isChecked ? 'checked' : ''}><span class="pn">${esc(m.name)}</span></span>
       ${inputHtml}
+      <span class="pshare" data-id="${m.id}">–</span>
     `;
     pBox.appendChild(row);
   });
@@ -1292,40 +1295,47 @@ function getFormParticipants(){
   });
 }
 
+function updateShares(){
+  const amount = parseFloat(document.getElementById('f_amount').value) || 0;
+  const parts = getFormParticipants();
+  const shares = parts.length ? computeShares({ amount, mode: formMode, participants: parts }) : {};
+  document.querySelectorAll('.pshare').forEach(el => {
+    const v = shares[el.dataset.id];
+    el.textContent = (amount > 0 && v !== undefined && isFinite(v)) ? fmt(v).replace(/^CHF\s*/, '') : '–';
+  });
+}
+
 function validateForm(){
   const msgEl = document.getElementById('validationMsg');
   const saveBtn = document.getElementById('saveExpenseBtn');
   if(!msgEl || !saveBtn) return;
+  updateShares();
   const amount = parseFloat(document.getElementById('f_amount').value) || 0;
   const parts = getFormParticipants();
+  // Meldung nur bei Fehler bzw. Fehlbetrag. In den Modi mit Eingabe bleibt der Platz reserviert, damit die Zeilen nicht springen.
+  const reserve = formMode !== 'equal';
+  const set = (text, ok) => {
+    msgEl.textContent = text;
+    msgEl.className = 'validation-msg ' + (ok ? 'ok' : 'bad');
+    msgEl.style.display = (text || reserve) ? 'block' : 'none';
+    msgEl.style.minHeight = reserve ? '18px' : '';
+    saveBtn.disabled = !ok;
+  };
 
-  if(parts.length === 0){
-    msgEl.textContent = 'Mindestens eine Person auswählen.';
-    msgEl.className = 'validation-msg bad'; saveBtn.disabled = true; return;
-  }
-  if(amount <= 0){
-    msgEl.textContent = 'Betrag muss grösser als 0 sein.';
-    msgEl.className = 'validation-msg bad'; saveBtn.disabled = true; return;
-  }
+  if(parts.length === 0) return set('Mindestens eine Person auswählen.', false);
+  if(amount <= 0) return set('Betrag muss grösser als 0 sein.', false);
+  if(formMode === 'equal') return set('', true);
 
-  if(formMode === 'equal'){
-    msgEl.textContent = `Je ${fmt(amount / parts.length)} pro Person.`;
-    msgEl.className = 'validation-msg ok'; saveBtn.disabled = false;
-  } else if(formMode === 'percent'){
-    const sum = parts.reduce((s,p) => s + p.value, 0);
+  const sum = parts.reduce((t, p) => t + p.value, 0);
+  if(formMode === 'percent'){
     const diff = Math.round((100 - sum) * 100) / 100;
-    if(Math.abs(diff) < 0.5){ msgEl.textContent = 'Prozente ergeben 100%.'; msgEl.className = 'validation-msg ok'; saveBtn.disabled = false; }
-    else { msgEl.textContent = `Prozente ergeben ${sum}% — Differenz ${diff}%.`; msgEl.className = 'validation-msg bad'; saveBtn.disabled = true; }
-  } else if(formMode === 'amount'){
-    const sum = parts.reduce((s,p) => s + p.value, 0);
-    const diff = Math.round((amount - sum) * 100) / 100;
-    if(Math.abs(diff) < 0.02){ msgEl.textContent = 'Beträge ergeben den Gesamtbetrag.'; msgEl.className = 'validation-msg ok'; saveBtn.disabled = false; }
-    else { msgEl.textContent = `Beträge ergeben ${fmt(sum)} — Differenz ${fmt(diff)}.`; msgEl.className = 'validation-msg bad'; saveBtn.disabled = true; }
-  } else if(formMode === 'weight'){
-    const sum = parts.reduce((s,p) => s + p.value, 0);
-    if(sum > 0){ msgEl.textContent = `Total ${sum} Anteile.`; msgEl.className = 'validation-msg ok'; saveBtn.disabled = false; }
-    else { msgEl.textContent = 'Mindestens ein Anteil grösser als 0 nötig.'; msgEl.className = 'validation-msg bad'; saveBtn.disabled = true; }
+    return Math.abs(diff) < 0.5 ? set('', true) : set(`Prozente ergeben ${sum}% — Differenz ${diff}%.`, false);
   }
+  if(formMode === 'amount'){
+    const diff = Math.round((amount - sum) * 100) / 100;
+    return Math.abs(diff) < 0.02 ? set('', true) : set(`Beträge ergeben ${fmt(sum)} — Differenz ${fmt(diff)}.`, false);
+  }
+  return sum > 0 ? set('', true) : set('Mindestens ein Anteil grösser als 0 nötig.', false);
 }
 
 function saveExpense(g){
