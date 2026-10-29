@@ -11,10 +11,9 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <title>Splitt'it — Gruppenkasse</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root{
+    --font:'Aptos','Segoe UI',system-ui,-apple-system,sans-serif;
     --bg:#EEF3FC;
     --bg-accent-1:#DCE7FB;
     --card:#FFFFFF;
@@ -35,20 +34,20 @@
   html,body{margin:0;padding:0;}
   html{ -webkit-text-size-adjust:100%; text-size-adjust:100%; touch-action:manipulation; overflow-x:hidden; }
   input, select, textarea{ min-width:0; max-width:100%; }
+  button{ font-family:inherit; }
   body{
     background:
       radial-gradient(1100px 500px at 15% -10%, var(--bg-accent-1) 0%, transparent 60%),
       radial-gradient(900px 500px at 110% 10%, #CFE0FF 0%, transparent 55%),
       var(--bg);
     min-height:100vh;
-    font-family:'Inter', sans-serif;
+    font-family:var(--font);
     color:var(--ink);
     display:flex;
     justify-content:center;
     padding:40px 16px 110px;
   }
   .receipt-wrap{ width:100%; max-width:440px; }
-  .toothed{ display:none; }
   .receipt{
     background:var(--card);
     border-radius:28px;
@@ -77,7 +76,7 @@
     background:var(--primary-soft);
     border:none;
     color:var(--primary-dark);
-    font-family:'Inter', sans-serif;
+    font-family:var(--font);
     font-size:13px; font-weight:600;
     padding:7px 12px;
     border-radius:20px;
@@ -97,7 +96,7 @@
   .menu-dots.show{ display:inline-flex; }
   .menu-dots svg{ width:18px; height:18px; fill:currentColor; }
   .wordmark{
-    font-family:'Manrope', sans-serif;
+    font-family:var(--font);
     font-weight:800;
     font-size:26px;
     letter-spacing:-0.5px;
@@ -112,7 +111,7 @@
     color:var(--primary);
   }
   .subtitle{
-    font-family:'Inter', sans-serif;
+    font-family:var(--font);
     font-size:12.5px;
     font-weight:600;
     letter-spacing:0.4px;
@@ -121,7 +120,7 @@
   }
   #storageStatus{ font-size:12px; text-align:center; margin:0 0 10px; }
   .section-title{
-    font-family:'Manrope', sans-serif;
+    font-family:var(--font);
     font-size:12px;
     font-weight:700;
     letter-spacing:0.6px;
@@ -144,9 +143,8 @@
     width:19px;height:19px; border-radius:50%; font-size:12px; line-height:1; cursor:pointer;
   }
   .chip button:hover{ background:#FFFFFF; }
-  .add-member-row{ display:flex; gap:8px; margin-bottom:6px; }
   input, select, textarea{
-    font-family:'Inter', sans-serif; font-size:16px;
+    font-family:var(--font); font-size:16px;
     padding:11px 13px; border:1.5px solid var(--border); border-radius:12px;
     background:#FAFBFF; color:var(--ink); width:100%;
     transition:border-color .15s ease, background .15s ease;
@@ -157,7 +155,7 @@
   }
   button:focus-visible{ outline:2px solid var(--primary); outline-offset:2px; }
   .btn{
-    font-family:'Inter', sans-serif; font-weight:700; font-size:13.5px;
+    font-family:var(--font); font-weight:700; font-size:13.5px;
     border:none; border-radius:12px; padding:11px 16px; cursor:pointer; white-space:nowrap;
     transition:transform .1s ease, box-shadow .15s ease, background .15s ease;
   }
@@ -171,15 +169,12 @@
   .btn-ink:disabled{ background:#C7CEE0; box-shadow:none; cursor:not-allowed; }
   .btn-ghost{ background:#F2F4FA; color:var(--ink-muted); border:1.5px solid var(--border); }
   .btn-ghost:hover{ background:#E9ECF6; }
-  .btn-accent{ background:var(--primary); color:#fff; }
 
   .hint{ font-size:12px; color:var(--ink-muted); margin:-4px 0 10px; }
-  .chip.directory{ background:#F2F4FA; border:1px solid var(--border); color:var(--ink); cursor:pointer; padding:7px 14px; font-family:'Inter', sans-serif; font-weight:500; }
-  .chip.directory:hover{ background:var(--primary-soft); border-color:var(--primary-soft-2); color:var(--primary-darker); }
   .member-row{
     display:flex; align-items:center; justify-content:space-between; width:100%;
     padding:13px 4px; border:none; border-bottom:1px solid var(--border); background:transparent;
-    font-family:'Inter', sans-serif; font-size:15px; font-weight:500; color:var(--ink); text-align:left; cursor:pointer;
+    font-family:var(--font); font-size:15px; font-weight:500; color:var(--ink); text-align:left; cursor:pointer;
   }
   .member-row:last-child{ border-bottom:none; }
   .member-row:hover{ color:var(--primary-darker); background:var(--primary-soft); border-radius:10px; }
@@ -198,7 +193,7 @@
   .you-stats{ display:flex; gap:10px; margin-bottom:6px; }
   .stat-card{ flex:1; background:var(--primary-soft); border-radius:14px; padding:12px 14px; }
   .stat-card .stat-label{ font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.5px; color:var(--primary-darker); opacity:.85; }
-  .stat-card .stat-value{ font-family:'Manrope', sans-serif; font-weight:800; font-size:19px; margin-top:4px; color:var(--primary-darker); }
+  .stat-card .stat-value{ font-family:var(--font); font-weight:800; font-size:19px; margin-top:4px; color:var(--primary-darker); }
   .stat-card.owe{ background:var(--negative-soft); }
   .stat-card.owe .stat-label, .stat-card.owe .stat-value{ color:var(--negative); }
   .stat-card.get{ background:var(--positive-soft); }
@@ -208,8 +203,6 @@
   .tab-btn{ border:1.5px solid var(--border); background:#fff; border-radius:12px; padding:9px 3px; font-size:11px; font-weight:700; color:var(--ink-muted); cursor:pointer; text-align:center; }
   .tab-btn.active{ background:var(--primary); border-color:var(--primary); color:#fff; }
 
-  .you-prompt{ background:var(--primary-soft); border-radius:14px; padding:14px; margin-bottom:6px; font-size:13.5px; }
-  .you-prompt select{ margin-top:8px; }
 
   .stat-row{ margin-bottom:14px; }
   .stat-row .srow-head{ display:flex; justify-content:space-between; font-size:13px; font-weight:600; margin-bottom:5px; gap:8px; }
@@ -222,15 +215,13 @@
   .legend-paid::before{ background:var(--primary); }
   .legend-cost::before{ background:#F5A524; }
 
-  .you-btn{ background:none; border:1px solid var(--primary-soft-2); color:var(--primary-dark); font-size:10px; font-weight:700; padding:3px 8px; border-radius:10px; cursor:pointer; }
-  .you-btn.active{ background:var(--primary); color:#fff; border-color:var(--primary); }
 
   .add-btn{
     display:flex; align-items:center; justify-content:center;
     position:fixed; right:22px; bottom:calc(22px + env(safe-area-inset-bottom, 0px)); z-index:50;
     width:56px; height:56px; margin:0; padding:0 0 3px;
     border:none; border-radius:50%; cursor:pointer;
-    font-family:'Manrope', sans-serif; font-size:32px; font-weight:600; line-height:1; color:#fff;
+    font-family:var(--font); font-size:32px; font-weight:600; line-height:1; color:#fff;
     background:linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
     box-shadow:0 10px 24px -6px #2856E8AA;
     transition:transform .1s ease, box-shadow .15s ease;
@@ -249,7 +240,7 @@
     box-shadow:0 30px 60px -20px #101A3488;
   }
   .modal-title{
-    font-family:'Manrope', sans-serif; font-weight:800; font-size:18px;
+    font-family:var(--font); font-weight:800; font-size:18px;
     color:var(--primary-darker); margin-bottom:16px;
   }
   #modalRoot{ position:relative; }
@@ -269,23 +260,12 @@
     transform:translateY(-1px);
   }
   .group-card .gname{
-    font-family:'Manrope', sans-serif; font-weight:700; font-size:16.5px; color:var(--ink);
+    font-family:var(--font); font-weight:700; font-size:16.5px; color:var(--ink);
   }
-  .group-card .gmeta{
-    font-size:12.5px; color:var(--ink-muted); margin-top:3px;
-    font-weight:500;
-  }
-  .group-card .gdel{
-    background:none; border:none; color:var(--negative);
-    font-size:12px; font-weight:600; cursor:pointer;
-    padding:4px 0 0 10px; white-space:nowrap;
-    opacity:0.75;
-  }
-  .group-card .gdel:hover{ opacity:1; }
   .menu-btn{
     display:flex; align-items:center; justify-content:space-between; width:100%;
     border:none; border-radius:16px; padding:16px; cursor:pointer; text-align:left; color:#fff;
-    font-family:'Manrope', sans-serif; font-weight:700; font-size:15.5px;
+    font-family:var(--font); font-weight:700; font-size:15.5px;
     transition:transform .1s ease, box-shadow .15s ease;
   }
   .menu-btn .chev{ font-size:24px; line-height:1; opacity:.85; }
@@ -293,22 +273,21 @@
   .menu-btn.members{ background:linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%); box-shadow:0 8px 20px -8px #2856E8AA; }
   .menu-btn.archive{ background:linear-gradient(135deg, #7A5CF0 0%, #5A3FD0 100%); box-shadow:0 8px 20px -8px #6A4CE0AA; margin-top:18px; }
   .menu-actions{ display:flex; flex-direction:column; gap:10px; }
+  .backup-banner{ display:flex; align-items:center; gap:8px; background:#FFF6E0; border:1px solid #F5D98A; color:#7A5300; border-radius:14px; padding:10px 12px; margin-bottom:14px; font-size:12.5px; font-weight:600; }
+  .backup-banner span{ flex:1; }
+  .backup-banner button{ border:none; background:#F5A524; color:#fff; font-weight:700; font-size:12px; border-radius:10px; padding:7px 10px; cursor:pointer; white-space:nowrap; }
+  .backup-banner button.x{ background:transparent; color:#7A5300; font-size:18px; line-height:1; padding:2px 6px; }
   .menu-actions .btn{ width:100%; margin:0; padding:13px 16px; }
   .member-row .gcount{ color:var(--ink-muted); font-weight:400; font-size:12.5px; margin-left:8px; }
 
   .expense{ padding: 6px 8px; margin:0 -8px; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:10px; cursor:pointer; border-radius:10px; transition:background .15s ease; }
   .expense:hover{ background:var(--primary-soft); }
   .expense-main{ flex:1; min-width:0; }
-  .expense-actions{ display:flex; gap:2px; flex-shrink:0; margin-left:auto; }
-  .icon-btn{ width:34px; height:34px; display:flex; align-items:center; justify-content:center; border:none; background:transparent; border-radius:10px; cursor:pointer; color:var(--ink-muted); transition:background .15s ease, color .15s ease; }
-  .icon-btn svg{ width:18px; height:18px; fill:none; stroke:currentColor; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
-  .icon-btn.edit:hover{ background:var(--primary-soft); color:var(--primary-dark); }
-  .icon-btn.del:hover{ background:var(--negative-soft); color:var(--negative); }
   .expense:last-child{ border-bottom:none; }
   .line{ display:flex; align-items:baseline; gap:6px; line-height:1.25; }
   .line .label{ font-size:14px; font-weight:600; white-space:nowrap; min-width:0; overflow:hidden; text-overflow:ellipsis; }
   .line .fill{ flex:1; }
-  .line .value{ flex-shrink:0;  font-family:'Manrope', sans-serif; font-size:14.5px; font-weight:700; color:var(--primary-darker); white-space:nowrap; }
+  .line .value{ flex-shrink:0;  font-family:var(--font); font-size:14.5px; font-weight:700; color:var(--primary-darker); white-space:nowrap; }
   .expense-meta{
     display:flex; justify-content:space-between; align-items:center;
     margin-top:1px; font-size:11.5px; line-height:1.3; color:var(--ink-muted);
@@ -321,16 +300,9 @@
     color:#fff; padding:16px 18px; border-radius:16px; margin-top:6px;
     box-shadow:0 10px 24px -10px #2856E877;
   }
-  .total-bar .lbl{ font-family:'Manrope', sans-serif; font-size:11.5px; font-weight:700; letter-spacing:1px; text-transform:uppercase; opacity:0.8; }
-  .total-bar .amt{ font-family:'Manrope', sans-serif; font-size:21px; font-weight:800; }
+  .total-bar .lbl{ font-family:var(--font); font-size:11.5px; font-weight:700; letter-spacing:1px; text-transform:uppercase; opacity:0.8; }
+  .total-bar .amt{ font-family:var(--font); font-size:21px; font-weight:800; }
 
-  .toggle-form-btn{
-    width:100%; padding:13px; border:1.5px dashed var(--primary-soft-2); border-radius:14px;
-    background:var(--primary-soft); color:var(--primary-darker); font-weight:700; font-size:13.5px; cursor:pointer;
-    transition:background .15s ease;
-  }
-  .toggle-form-btn:hover{ background:var(--primary-soft-2); }
-  .form-panel{ border:1.5px solid var(--border); border-radius:16px; padding:16px; margin-top:12px; background:#FAFBFF; }
   .field{ margin-bottom:12px; }
   .field label{ display:block; font-size:11.5px; font-weight:700; letter-spacing:0.5px; text-transform:uppercase; color:var(--ink-muted); margin-bottom:5px; }
   .mode-tabs{ display:flex; border:1.5px solid var(--border); border-radius:12px; overflow:hidden; background:#fff; }
@@ -345,7 +317,7 @@
   .participant-row:last-child{ border-bottom:none; }
   .participant-row .pname{ flex:1; font-size:14px; font-weight:500; display:flex; align-items:center; gap:8px; }
   .participant-row input[type=checkbox]{ width:16px; accent-color:var(--primary); }
-  .participant-row input[type=number]{ width:80px; text-align:right; font-family:'Manrope', sans-serif; padding:8px 10px; }
+  .participant-row input[type=number]{ width:80px; text-align:right; font-family:var(--font); padding:8px 10px; }
   .validation-msg{ font-size:12.5px; margin-top:8px; font-weight:600; }
   .validation-msg.ok{ color:var(--positive); }
   .validation-msg.bad{ color:var(--negative); }
@@ -355,7 +327,7 @@
 
   .balance-row{ display:flex; justify-content:space-between; align-items:center; padding:9px 0; border-bottom:1px solid var(--border); font-size:14.5px; font-weight:500; }
   .balance-row:last-child{ border-bottom:none; }
-  .balance-row .amt{ font-family:'Manrope', sans-serif; font-weight:700; }
+  .balance-row .amt{ font-family:var(--font); font-weight:700; }
   .amt.pos{ color:var(--positive); }
   .amt.neg{ color:var(--negative); }
   .amt.zero{ color:var(--ink-muted); }
@@ -366,11 +338,11 @@
     background:var(--primary-soft); border-radius:12px;
   }
   .settle-row .arrow{ color:var(--primary); font-weight:700; }
-  .settle-row .amt{ margin-left:auto; font-family:'Manrope', sans-serif; font-weight:800; color:var(--primary-darker); }
+  .settle-row .amt{ margin-left:auto; font-family:var(--font); font-weight:800; color:var(--primary-darker); }
 
   footer.stub{
     text-align:center; padding:18px 0 22px;
-    font-family:'Inter', sans-serif; font-size:11px; font-weight:600; letter-spacing:0.3px; color:var(--ink-muted);
+    font-family:var(--font); font-size:11px; font-weight:600; letter-spacing:0.3px; color:var(--ink-muted);
   }
   .reset-link{ text-align:center; margin-top:14px; }
   .reset-link button{ background:none;border:none;color:var(--ink-muted); font-size:12px; font-weight:600; cursor:pointer; }
@@ -384,7 +356,7 @@
 
     <header class="masthead">
       <button class="back-btn" id="backBtn">‹ Gruppen</button>
-      <button class="menu-dots" id="groupMenuBtn" title="Gruppe verwalten" aria-label="Gruppe verwalten"><svg viewBox="0 0 24 24"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg></button>
+      <button class="menu-dots" id="groupMenuBtn" title="Menü" aria-label="Menü"><svg viewBox="0 0 24 24"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg></button>
       <p class="wordmark">splitt<span class="dot">’</span>it</p>
       <p class="subtitle" id="subtitle">Gruppenkasse</p>
     </header>
@@ -407,11 +379,11 @@ let showMembersView = false;
 let showArchiveView = false;
 let activeTab = 'ausgaben'; // 'ausgaben' | 'mitglieder' | 'statistik' | 'ausgleich'
 let formMode = 'equal';
-let formOpen = false;
 let editingExpenseId = null;
 let formDraft = null;
 let modalOnClose = null;
-let storageBackend = 'none'; // 'artifact' | 'local' | 'none'
+let meta = { lastBackup: null };
+let reminderDismissed = false;
 
 function uid(){ return Math.random().toString(36).slice(2,10); }
 function fmt(n){
@@ -550,8 +522,7 @@ function openAddMemberModal(){
   openModal('Mitglied hinzufügen', `
     <div class="field">
       <label>Neue Person</label>
-      <input id="m_memberName" list="m_peopleList" type="text" maxlength="24" placeholder="Name eingeben…">
-      <datalist id="m_peopleList">${available.map(p => `<option value="${esc(p.name)}">`).join('')}</datalist>
+      <input id="m_memberName" type="text" maxlength="24" placeholder="Name eingeben…" autocomplete="off">
     </div>
     <div class="validation-msg bad" id="m_err" style="display:none; margin:0 0 10px;"></div>
     <p class="hint" style="margin:0 0 12px;">Neue Namen werden automatisch zur zentralen Liste hinzugefügt.</p>
@@ -614,40 +585,178 @@ function migrateState(){
   });
 }
 
-async function loadState(){
-  if(typeof window.storage !== 'undefined' && window.storage && typeof window.storage.get === 'function'){
-    try{
-      const res = await window.storage.get(STORAGE_KEY, false);
-      if(res && res.value) state = JSON.parse(res.value);
-      storageBackend = 'artifact';
-      migrateState(); render();
-      return;
-    }catch(e){
-      storageBackend = 'artifact';
-      migrateState(); render();
+/* ---------- Speicher: IndexedDB hinter einer dünnen Storage-Schicht ---------- */
+const DB_NAME = 'splittit-db';
+const DB_STORE = 'kv';
+const Storage = {
+  backend: 'idb',   // 'idb' (Normalfall) | 'local' (Notfall, falls IndexedDB nicht startet) | 'none'
+  _db: null,
+  _open(){
+    if(this._db) return Promise.resolve(this._db);
+    return new Promise((resolve, reject) => {
+      if(!window.indexedDB){ reject(new Error('IndexedDB nicht verfügbar')); return; }
+      const req = indexedDB.open(DB_NAME, 1);
+      req.onupgradeneeded = () => { req.result.createObjectStore(DB_STORE); };
+      req.onsuccess = () => {
+        this._db = req.result;
+        this._db.onversionchange = () => { this._db.close(); this._db = null; };
+        resolve(this._db);
+      };
+      req.onerror = () => reject(req.error);
+      req.onblocked = () => reject(new Error('IndexedDB blockiert'));
+    });
+  },
+  _lsKey(key){ return key === 'state' ? STORAGE_KEY : 'splittit-' + key; },
+  async get(key){
+    if(this.backend === 'idb'){
+      try{
+        const db = await this._open();
+        const raw = await new Promise((resolve, reject) => {
+          const q = db.transaction(DB_STORE, 'readonly').objectStore(DB_STORE).get(key);
+          q.onsuccess = () => resolve(q.result);
+          q.onerror = () => reject(q.error);
+        });
+        return raw === undefined ? null : JSON.parse(raw);
+      }catch(e){
+        console.error('IndexedDB nicht nutzbar, wechsle auf Notfallspeicher', e);
+        this.backend = 'local';
+      }
+    }
+    if(this.backend === 'local'){
+      try{
+        const raw = window.localStorage.getItem(this._lsKey(key));
+        return raw ? JSON.parse(raw) : null;
+      }catch(e){ this.backend = 'none'; }
+    }
+    return null;
+  },
+  async set(key, value){
+    const raw = JSON.stringify(value);   // Momentaufnahme zum Zeitpunkt des Aufrufs
+    if(this.backend === 'idb'){
+      const db = await this._open();
+      await new Promise((resolve, reject) => {
+        const tx = db.transaction(DB_STORE, 'readwrite');
+        tx.objectStore(DB_STORE).put(raw, key);
+        tx.oncomplete = () => resolve();
+        tx.onerror = () => reject(tx.error);
+        tx.onabort = () => reject(tx.error);
+      });
       return;
     }
+    if(this.backend === 'local'){
+      window.localStorage.setItem(this._lsKey(key), raw);
+      return;
+    }
+    throw new Error('Kein Speicher verfügbar');
+  },
+  // Altdaten der früheren Version (localStorage) für die einmalige Übernahme
+  legacyState(){
+    try{
+      const raw = window.localStorage.getItem(STORAGE_KEY);
+      return raw ? JSON.parse(raw) : null;
+    }catch(e){ return null; }
   }
+};
+
+async function loadState(){
+  let migrated = false;
   try{
-    const raw = window.localStorage.getItem(STORAGE_KEY);
-    if(raw) state = JSON.parse(raw);
-    storageBackend = 'local';
-  }catch(e){
-    storageBackend = 'none';
-    setStorageStatus('⚠ Kein Speicher verfügbar — Daten gehen beim Schliessen verloren.', true);
-  }
-  migrateState(); render();
+    let saved = await Storage.get('state');
+    if(!saved && Storage.backend === 'idb'){
+      const legacy = Storage.legacyState();
+      if(legacy){ saved = legacy; migrated = true; }
+    }
+    if(saved) state = saved;
+  }catch(e){ console.error('Laden fehlgeschlagen', e); }
+
+  if(Storage.backend === 'local') setStorageStatus('⚠ Normaler Speicher nicht verfügbar — bitte regelmässig sichern (⋯ auf dem Startbildschirm).', true);
+  else if(Storage.backend === 'none') setStorageStatus('⚠ Kein Speicher verfügbar — Daten gehen beim Schliessen verloren.', true);
+
+  migrateState();
+  try{ meta = Object.assign({ lastBackup: null }, await Storage.get('meta')); }catch(e){}
+  if(migrated) await saveState();   // einmalige Übernahme aus localStorage in IndexedDB
+  render();
 }
 
 async function saveState(){
-  if(storageBackend === 'artifact'){
-    try{ await window.storage.set(STORAGE_KEY, JSON.stringify(state), false); return; }
-    catch(e){ console.error('Artifact-Speicher fehlgeschlagen, versuche localStorage', e); storageBackend = 'local'; }
+  try{ await Storage.set('state', state); }
+  catch(e){
+    console.error('Speichern fehlgeschlagen', e);
+    setStorageStatus('⚠ Speichern fehlgeschlagen — bitte sofort eine Sicherung exportieren (⋯ auf dem Startbildschirm).', true);
   }
-  if(storageBackend === 'local'){
-    try{ window.localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); return; }
-    catch(e){ storageBackend = 'none'; setStorageStatus('⚠ Speichern fehlgeschlagen — Daten gehen beim Schliessen verloren.', true); }
-  }
+}
+
+/* ---------- Datensicherung (Export / Import als JSON-Datei) ---------- */
+const BACKUP_REMIND_DAYS = 183;   // ca. ein halbes Jahr
+
+function fmtStamp(ts){
+  const d = new Date(ts);
+  const p = n => String(n).padStart(2, '0');
+  return `${p(d.getDate())}.${p(d.getMonth() + 1)}.${d.getFullYear()} · ${p(d.getHours())}:${p(d.getMinutes())}`;
+}
+function plural(n, one, many){ return n + ' ' + (n === 1 ? one : many); }
+function hasData(){ return state.people.length > 0 || state.groups.length > 0; }
+function backupDue(){
+  if(!hasData()) return false;
+  if(!meta.lastBackup) return true;
+  return (Date.now() - meta.lastBackup) > BACKUP_REMIND_DAYS * 86400000;
+}
+function backupBannerHtml(){
+  if(reminderDismissed || !backupDue()) return '';
+  const days = meta.lastBackup ? Math.floor((Date.now() - meta.lastBackup) / 86400000) : null;
+  const msg = days === null ? 'Noch keine Datensicherung erstellt.' : `Letzte Sicherung vor ${days} Tagen.`;
+  return `<div class="backup-banner"><span>${msg}</span><button id="backupBannerBtn">Jetzt sichern</button><button class="x" id="backupBannerX" aria-label="Ausblenden">×</button></div>`;
+}
+
+async function exportBackup(){
+  const payload = { app: 'splittit', version: 1, exportedAt: new Date().toISOString(), state };
+  const bytes = new TextEncoder().encode(JSON.stringify(payload, null, 2));
+  const delivered = await deliverFile(bytes, `Splittit_Sicherung_${nowParts().date}.json`, 'application/json');
+  if(!delivered) return false;
+  meta.lastBackup = Date.now();
+  try{ await Storage.set('meta', meta); }catch(e){ console.error(e); }
+  return true;
+}
+
+function openBackupModal(){
+  openModal('Datensicherung', `
+    <p class="hint" style="margin:0 0 6px;">${meta.lastBackup ? 'Letzte Sicherung: ' + fmtStamp(meta.lastBackup) : 'Noch keine Sicherung erstellt.'}</p>
+    <p class="hint" style="margin:0 0 14px;">Die Daten liegen nur auf diesem Gerät. Die Sicherung ist eine Datei, die du speichern oder dir selbst senden kannst.</p>
+    <div class="menu-actions">
+      <button class="btn btn-ink" id="bk_export">Sicherung exportieren</button>
+      <button class="btn btn-ghost" id="bk_import">Sicherung importieren</button>
+      <button class="btn btn-ghost" id="bk_close">Schliessen</button>
+    </div>
+    <input type="file" id="bk_file" accept=".json,application/json,text/plain" style="display:none">
+    <div class="validation-msg bad" id="m_err" style="display:none; margin-top:10px;"></div>`);
+  const fileInput = document.getElementById('bk_file');
+  document.getElementById('bk_close').onclick = closeModal;
+  document.getElementById('bk_export').onclick = async () => {
+    if(await exportBackup()){ closeModal(); render(); }
+  };
+  document.getElementById('bk_import').onclick = () => fileInput.click();
+  fileInput.onchange = async () => {
+    const f = fileInput.files && fileInput.files[0];
+    if(!f) return;
+    let data;
+    try{
+      data = JSON.parse(await f.text());
+      if(!data || data.app !== 'splittit' || !data.state || !Array.isArray(data.state.people) || !Array.isArray(data.state.groups)) throw new Error('Format');
+    }catch(e){
+      fileInput.value = '';
+      showModalError('Diese Datei ist keine gültige Splitt’it-Sicherung.');
+      return;
+    }
+    const when = data.exportedAt ? fmtStamp(Date.parse(data.exportedAt)) : 'unbekanntem Datum';
+    const ok = confirm(`Sicherung vom ${when} einspielen?\n\nIn der Sicherung: ${plural(data.state.groups.length, 'Gruppe', 'Gruppen')}, ${plural(data.state.people.length, 'Person', 'Personen')}.\nAktuell in der App: ${plural(state.groups.length, 'Gruppe', 'Gruppen')}, ${plural(state.people.length, 'Person', 'Personen')}.\n\nDie aktuellen Daten werden dabei überschrieben.`);
+    if(!ok){ fileInput.value = ''; return; }
+    state = data.state;
+    migrateState();
+    await saveState();
+    closeModal();
+    currentGroupId = null; showMembersView = false; showArchiveView = false;
+    render();
+  };
 }
 
 /* ---------- Zentrale Mitgliederliste ---------- */
@@ -681,7 +790,6 @@ function deletePersonGlobally(id){
   return true;
 }
 
-function setCurrentUser(id){ state.currentUserId = id; saveState(); render(); }
 function personName(id){ const p = state.people.find(p => p.id === id); return p ? p.name : '?'; }
 function groupMembers(g){
   return g.memberIds.map(id => state.people.find(p => p.id === id)).filter(Boolean)
@@ -733,7 +841,7 @@ function openGroupMenu(){
   document.getElementById('gm_close').onclick = closeModal;
 }
 
-function openGroup(id){ currentGroupId = id; formOpen = false; formMode = 'equal'; activeTab = 'ausgaben'; render(); }
+function openGroup(id){ currentGroupId = id; formMode = 'equal'; activeTab = 'ausgaben'; render(); }
 function goToStart(){ currentGroupId = null; showMembersView = false; showArchiveView = false; render(); }
 function goBack(){
   const g = getGroup();
@@ -835,9 +943,12 @@ function render(){
   const backBtn = document.getElementById('backBtn');
   backBtn.classList.toggle('show', inGroup || showMembersView || showArchiveView);
   backBtn.onclick = goBack;
+  const onStart = !inGroup && !showMembersView && !showArchiveView;
   const menuBtn = document.getElementById('groupMenuBtn');
-  menuBtn.classList.toggle('show', inGroup);
-  menuBtn.onclick = openGroupMenu;
+  menuBtn.classList.toggle('show', inGroup || onStart);
+  menuBtn.onclick = inGroup ? openGroupMenu : openBackupModal;
+  const menuLabel = inGroup ? 'Gruppe verwalten' : 'Datensicherung';
+  menuBtn.title = menuLabel; menuBtn.setAttribute('aria-label', menuLabel);
 
   if(!inGroup && showMembersView){
     document.getElementById('subtitle').textContent = 'Mitgliederverwaltung';
@@ -879,6 +990,7 @@ function renderStartScreen(){
     : groupCardsHtml(active);
 
   main.innerHTML = `
+    ${backupBannerHtml()}
     <button class="menu-btn members" id="openMembersBtn"><span>Mitgliederverwaltung</span><span class="chev">›</span></button>
     <div class="section-title">Deine Gruppen</div>
     ${groupsHtml}
@@ -888,6 +1000,11 @@ function renderStartScreen(){
 
   bindGroupCards(main);
   document.getElementById('addGroupBtn').onclick = openAddGroupModal;
+  const bb = document.getElementById('backupBannerBtn');
+  if(bb){
+    bb.onclick = openBackupModal;
+    document.getElementById('backupBannerX').onclick = () => { reminderDismissed = true; render(); };
+  }
   document.getElementById('openMembersBtn').onclick = () => { showMembersView = true; render(); };
   document.getElementById('openArchiveBtn').onclick = () => { showArchiveView = true; render(); };
 }
@@ -1012,7 +1129,6 @@ function renderExpenses(g){
     sortedExpenses(g).forEach(e => {
       const div = document.createElement('div');
       div.className = 'expense';
-      const modeLabel = {equal:'gleich', percent:'Prozent', amount:'Betrag', weight:'Anteile'}[e.mode];
       div.innerHTML = `
         <div class="expense-main">
           <div class="line">
@@ -1159,6 +1275,8 @@ function openExpenseModal(g){
   }
 
   validateForm();
+  // Neue Ausgabe: Cursor direkt in die Beschreibung (nicht beim Wechsel des Aufteilungsmodus)
+  if(!editingExpense && !formDraft) document.getElementById('f_desc').focus();
 }
 
 function getFormParticipants(){
@@ -1546,19 +1664,20 @@ function buildGroupPdf(g){
   return bytes;
 }
 
-async function deliverPdf(bytes, filename){
-  const blob = new Blob([bytes], { type:'application/pdf' });
-  const file = (typeof File === 'function') ? new File([blob], filename, { type:'application/pdf' }) : null;
+async function deliverFile(bytes, filename, mime){
+  const blob = new Blob([bytes], { type: mime });
+  const file = (typeof File === 'function') ? new File([blob], filename, { type: mime }) : null;
   const touch = window.matchMedia && window.matchMedia('(pointer: coarse)').matches;
   if(touch && file && navigator.canShare && navigator.canShare({ files:[file] })){
-    try{ await navigator.share({ files:[file], title: filename }); return; }
-    catch(err){ if(err && err.name === 'AbortError') return; }
+    try{ await navigator.share({ files:[file], title: filename }); return true; }
+    catch(err){ if(err && err.name === 'AbortError') return false; }
   }
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url; a.download = filename;
   document.body.appendChild(a); a.click(); a.remove();
   setTimeout(() => URL.revokeObjectURL(url), 60000);
+  return true;
 }
 
 async function exportGroupPdf(g){
@@ -1566,7 +1685,7 @@ async function exportGroupPdf(g){
   try{ bytes = buildGroupPdf(g); }
   catch(err){ console.error(err); alert('Die PDF-Datei konnte nicht erstellt werden.'); return; }
   const safe = g.name.replace(/[^A-Za-z0-9äöüÄÖÜ_-]+/g, '_').replace(/^_+|_+$/g, '') || 'Gruppe';
-  await deliverPdf(bytes, `Splittit_${safe}_${nowParts().date}.pdf`);
+  await deliverFile(bytes, `Splittit_${safe}_${nowParts().date}.pdf`, 'application/pdf');
 }
 
 function updateHeaderOffset(){

@@ -1,4 +1,4 @@
-const CACHE = 'splittit-v1';
+const CACHE = 'splittit-v2';
 const ASSETS = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png', './apple-touch-icon.png'];
 
 self.addEventListener('install', (e) => {
@@ -12,14 +12,27 @@ self.addEventListener('activate', (e) => {
   );
 });
 
-// Netzwerk zuerst (damit Updates ankommen), bei Offline aus dem Cache
 self.addEventListener('fetch', (e) => {
-  if(e.request.method !== 'GET') return;
+  const req = e.request;
+  if(req.method !== 'GET') return;
+  if(new URL(req.url).origin !== self.location.origin) return;
+
+  // Icons: Cache zuerst
+  if(/\.(png|ico)$/.test(new URL(req.url).pathname)){
+    e.respondWith(
+      caches.match(req).then(hit => hit || fetch(req).then(res => {
+        if(res.ok){ const copy = res.clone(); caches.open(CACHE).then(c => c.put(req, copy)).catch(() => {}); }
+        return res;
+      }))
+    );
+    return;
+  }
+
+  // HTML, Manifest u. a.: Netzwerk zuerst (damit Updates ankommen), offline aus dem Cache
   e.respondWith(
-    fetch(e.request).then(res => {
-      const copy = res.clone();
-      caches.open(CACHE).then(c => c.put(e.request, copy)).catch(() => {});
+    fetch(req, { cache: 'no-cache' }).then(res => {
+      if(res.ok){ const copy = res.clone(); caches.open(CACHE).then(c => c.put(req, copy)).catch(() => {}); }
       return res;
-    }).catch(() => caches.match(e.request).then(r => r || caches.match('./index.html')))
+    }).catch(() => caches.match(req).then(r => r || caches.match('./index.html')))
   );
 });
